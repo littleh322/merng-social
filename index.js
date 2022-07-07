@@ -1,18 +1,34 @@
+/** Dependency Imports */
 const {ApolloServer} = require('apollo-server'); //Calculating...
 const gql = require('graphql-tag');
 const mongoose = require('mongoose');
 
+/** Relative Imports */
+const Post = require('./models/Posts');
 const { MONGODB }= require('./config.js');
 
 const typeDefs = gql`
-    type Query{
-        sayHi: String!
+    type Post {
+        id: ID!
+        body: String!
+        createdAt: String!
+        username: String!
+    }
+    type Query {
+        getPosts: [Post]
     }
 `
 
 const resolvers = {
     Query: {
-        sayHi: () => 'Hello World!!!!!'
+        async getPosts() {
+            try {
+                const posts = await Post.find();
+                return posts;
+            } catch(err) {
+                throw new Error(err);
+            }
+        }
     }
 }
 
